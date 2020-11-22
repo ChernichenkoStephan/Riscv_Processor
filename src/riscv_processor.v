@@ -131,7 +131,7 @@ module riscv_processor(
     debug_result <= rd;
 
     // Jal unconditional jump instruction signal
-    program_counter_add = (~( jal || (comparsion_result && b) ) ? 32'd4 : ((b) ? imm_B : imm_J) );
+    // program_counter_add = (~( jal || (comparsion_result && b) ) ? 32'd4 : ((b) ? imm_B : imm_J) );
 
     // Multiplexer control signal for selecting data to be written to the register file
     wd3 <= ( WS ? rd : result );
