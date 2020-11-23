@@ -12,13 +12,13 @@ wire   [6:0]  hex2_o;
 localparam CLK_FREQ_MHZ  = 5;                  // 100 MHz
 localparam CLK_SEMI      = CLK_FREQ_MHZ / 2;   // 50  MHz
 
-wire  [31:0]  instruction_addr; 	// instruction_addr
-wire  [31:0]  instruction; 				// instruction
-wire  [31:0]  wd; 								// wd
-wire  [31:0]  read1; 							// rd1
-wire  [31:0]  read2; 							// rd2
-wire  [31:0]  result; 						// result
-wire          comparsion_result; 	// comparsion_result
+wire  [31:0]  instruction_addr;     // instruction_addr
+wire  [31:0]  instruction;          // instruction
+wire  [31:0]  wd;                   // wd
+wire  [31:0]  read1;                // rd1
+wire  [31:0]  read2;                // rd2
+wire  [31:0]  result;               // result
+wire          comparsion_result;    // comparsion_result
 
 
 

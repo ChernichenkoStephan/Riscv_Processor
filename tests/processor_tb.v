@@ -12,18 +12,13 @@ wire [31:0] result;
 
 riscv_processor processor( clk_i, reset, result );
 
-/*
-
-*/
-
-
 task testProcessor;
 
-	begin
+  begin
 
-	#95
+  #95
 
-	$display("=====================================");
+  $display("=====================================");
   $display("Result: %b/%d", result, result );
   $display("=====================================");
 

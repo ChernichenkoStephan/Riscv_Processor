@@ -2,16 +2,16 @@
 
 module rf_tb();
 
-reg 					    clk_i;
-reg 		[4:0] 	addr1_i;  // rd1 adress
-reg 		[4:0] 	addr2_i;  // rd2 adress
-reg 		[4:0] 	addr3_i;  // wd adress
-reg 		[31:0]	   wd_i;	// write port
-reg 					     we_i;  // control port
-reg						    reset;  // reset port
+reg           clk_i;
+reg   [4:0]   addr1_i;  // rd1 adress
+reg   [4:0]   addr2_i;  // rd2 adress
+reg   [4:0]   addr3_i;  // wd adress
+reg   [31:0]  wd_i;     // write port
+reg           we_i;     // control port
+reg           reset;    // reset port
 
-wire 	  [31:0]    rd1_o;  // first read port
-wire	  [31:0]    rd2_o;  // second read port
+wire  [31:0]    rd1_o;  // first read port
+wire  [31:0]    rd2_o;  // second read port
 
 rf RAM (clk_i, addr1_i, addr2_i, addr3_i, wd_i, we_i, reset, rd1_o, rd2_o);
 

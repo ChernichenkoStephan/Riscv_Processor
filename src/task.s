@@ -21,7 +21,7 @@ __start:
 		lw x10, 0(x8)       #                 || Load b
 		addi x11, x0, 0     # x11 <- 0        || Make reg 11 accumulator of result
 		addi x12, x0, 1     # x12 <- 0x1      || Put 1 const to 12 reg for compearations
-		jal mult            # mult(a, b)      || Calling function
+		call mult           # mult(a, b)      || Calling function
 return:
 		addi x15, x0, 12    # output result   || Define result address
 		sw x11, 0(x15)      # output result   || Writing result to memory
@@ -35,12 +35,12 @@ mult:
 			and x13, x10, x12       # x13 = b & 0x1     || Prepear b to compearations
 			bne x13, x12, if        # if (x13 == 0x1){  || Check if b is even
 			add x11, x11, x9        # result += a;      || Accumulating of result
-	if:													# }                 || If's skip
+	if:                         # }                 || If's skip
 			srl x10, x10, x12       # b >> = 1;         || Dividing b by 2
 			sll x9, x9, x12         # a << = 1;         || Multiplying a by 2
 			jal while_start         #                   || While's go to
 	while_end:                  # }                 || While close bracket
-			jal return              #                   || Returning to main func
+			ret                     #                   || Returning to main func
 
 Exit:
 	nop

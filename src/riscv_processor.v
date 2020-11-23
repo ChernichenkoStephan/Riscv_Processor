@@ -45,10 +45,10 @@ module riscv_processor(
   wire comparsion_result;
 
   // Immediate constants
-  wire     [31:0]   imm_I;
-  wire     [31:0]   imm_S;
-  wire     [31:0]   imm_J;
-  wire     [31:0]   imm_B;
+  wire    [31:0]   imm_I;
+  wire    [31:0]   imm_S;
+  wire    [31:0]   imm_J;
+  wire    [31:0]   imm_B;
 
   initial program_counter = 32'h76000000;
 
@@ -87,11 +87,11 @@ module riscv_processor(
           .addr1_i   (instruction[19:15]),  // rd1 adress
           .addr2_i   (instruction[24:20]),  // rd2 adress
           .addr3_i   (instruction[11:7]),   // wd3 adress
-          .wd_i      (wd3),	                // write port
+          .wd_i      (wd3),                 // write port
           .we_i      (rfwe),                // control port
           .reset     (reset),               // reset port
           .rd1_o     (rd1),                 // first read port
-          .rd2_o     (rd2)	                // second read port
+          .rd2_o     (rd2)                  // second read port
   );
 
   miriscv_alu alu(
@@ -106,17 +106,20 @@ module riscv_processor(
   always @ ( posedge clk_i ) begin
 
     // Main loop
-    // program_counter <= (reset ? 32'h76000000 : ( jalr ? rd1 : (program_counter + program_counter_add) ))
-
     if (reset)
       program_counter <= 32'h76000000;
     else begin
-      if (~( jal || (comparsion_result && b) ) )
-        program_counter <= program_counter + 32'd4;
-      else if (b)
-        program_counter <= program_counter + imm_B;
-      else
-        program_counter <= program_counter + imm_J;
+      if (jalr)
+        program_counter <= rd1 + imm_I;
+      else begin
+        if ( jal || (comparsion_result && b) )
+          if (b)
+            program_counter <= program_counter + imm_B;
+          else
+            program_counter <= program_counter + imm_J;
+        else
+          program_counter <= program_counter + 32'd4;
+      end
     end
 
   end
@@ -129,9 +132,6 @@ module riscv_processor(
   always @ ( * ) begin
 
     debug_result <= rd;
-
-    // Jal unconditional jump instruction signal
-    // program_counter_add = (~( jal || (comparsion_result && b) ) ? 32'd4 : ((b) ? imm_B : imm_J) );
 
     // Multiplexer control signal for selecting data to be written to the register file
     wd3 <= ( WS ? rd : result );

@@ -1,6 +1,6 @@
 module im (
-	input 		  [31:0] addr_i, // read adress
-	output wire	[31:0] rd_o    // read port
+	input        [31:0] addr_i, // read adress
+	output wire  [31:0] rd_o    // read port
 );
 
 reg [31:0] MEM [0:63]; // define of memory from instructions memory

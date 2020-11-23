@@ -12,13 +12,13 @@ wire   [6:0]  hex2_o;
 localparam CLK_FREQ_MHZ  = 5;                  // 100 MHz
 localparam CLK_SEMI      = CLK_FREQ_MHZ / 2;   // 50  MHz
 
-wire  [31:0]  instruction_addr; 	// instruction_addr
-wire  [31:0]  instruction; 				// instruction
-wire  [31:0]  wd; 								// wd
-wire  [31:0]  read1; 							// rd1
-wire  [31:0]  read2; 							// rd2
-wire  [31:0]  result; 						// result
-wire          comparsion_result; 	// comparsion_result
+wire  [31:0]  instruction_addr;     // instruction_addr
+wire  [31:0]  instruction;          // instruction
+wire  [31:0]  wd;                   // wd
+wire  [31:0]  read1;                // rd1
+wire  [31:0]  read2;                // rd2
+wire  [31:0]  result;               // result
+wire          comparsion_result;    // comparsion_result
 
 wire  [31:0]  debug_result;
 
@@ -41,14 +41,14 @@ proto_processor proc(
 
 task testPP;
 
-	input integer sw;
+  input integer sw;
 
-	begin
-	switches_i = sw;
+  begin
+  switches_i = sw;
 
-	#100
+  #100
 
-	$display("=====================================");
+  $display("=====================================");
   $display("Switches: %b", switches_i );
   $display("Result  = %d / %b ", debug_result, debug_result);
   $display("First display o  = %d / %b ", hex1_o, hex1_o);
@@ -56,7 +56,7 @@ task testPP;
   $display("=====================================");
 
 
-	end
+  end
 endtask
 
 /*
@@ -84,11 +84,11 @@ endtask
   0_0_1_10_0100_00010_00100_00101_00000000 // reg[5] <- reg[2] & reg[4]               || Check if b is odd
   0_1_0_00_1100_00101_00000_00000_00000010 // if (reg[5] == reg[0]) PC <- PC + (2*4)  || If b is odd add a to result
   0_0_1_10_0000_00011_00001_00011_00000000 // reg[3] <- reg[3] + reg[1]               || Adding a to result (accumulation)
-  1_0_0_00_0000_00000_00000_00000_00000001 // PC <- PC + (1 * 4)							        || Skip for step bug
+  1_0_0_00_0000_00000_00000_00000_00000001 // PC <- PC + (1 * 4)                      || Skip for step bug
   0_0_1_10_0111_00001_00100_00001_00000000 // reg[1] <- reg[1] << reg[4]              || Multiplying a by 2
   0_0_1_10_0101_00010_00100_00010_00000000 // reg[2] <- reg[2] >>> reg[4]             || Dividing b by 2
   1_0_0_00_0000_00000_00000_00000_11111001 // PC <- PC + (-6 * 4)                     || Go back to first comparison
-	0_0_1_10_0000_00011_00000_00011_00000000 // reg[3] <- reg[3] + reg[0]               || Making result signal equal to result
+  0_0_1_10_0000_00011_00000_00011_00000000 // reg[3] <- reg[3] + reg[0]               || Making result signal equal to result
   1_0_0_00_0000_00100_00000_00000_00000000 // PC <- PC + (0 * 4)                      || Stop Program and output result
 
 00100000000000000000000111111101

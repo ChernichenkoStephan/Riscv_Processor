@@ -1,19 +1,19 @@
 `include "../defines/miriscv_defines.v"
 
 module mriscv_decoder(
-input 	    [31:0]                 fetched_instr_i,    // Decoding instruction read from instruction memory
-output reg 	[1:0]                  ex_op_a_sel_o,      // Multiplexer control signal to select the first ALU operand
-output reg 	[2:0]                  ex_op_b_sel_o,      // Multiplexer control signal to select the second ALU operand
-output reg 	[`ALU_OP_WIDTH-1:0]    alu_op_o,           // ALU operation
-output reg 			                   mem_req_o,          // Memory access request (part of the memory interface)
-output reg 			                   mem_we_o,           // Memory write enable signal, "write enable" (== 0 - read)
-output reg 	[2:0]                  mem_size_o,         // Control signal to select the word size when reading-writing to memory (part of the memory interface)
-output reg 			                   gpr_we_a_o,         // Register file write enable signal
-output reg 			                   wb_src_sel_o,       // Multiplexer control signal for selecting data to be written to the register file
-output reg 			                   illegal_instr_o,    // Incorrect instruction signal (not marked on the diagram)
-output reg 			                   branch_o,           // Conditional branch instruction signal
-output reg 			                   jal_o,              // Jal unconditional jump instruction signal
-output reg 			                   jalr_o              // Jarl unconditional jump instruction signal
+input         [31:0]                fetched_instr_i,    // Decoding instruction read from instruction memory
+output reg    [1:0]                 ex_op_a_sel_o,      // Multiplexer control signal to select the first ALU operand
+output reg    [2:0]                 ex_op_b_sel_o,      // Multiplexer control signal to select the second ALU operand
+output reg    [`ALU_OP_WIDTH-1:0]   alu_op_o,           // ALU operation
+output reg                          mem_req_o,          // Memory access request (part of the memory interface)
+output reg                          mem_we_o,           // Memory write enable signal, "write enable" (== 0 - read)
+output reg    [2:0]                 mem_size_o,         // Control signal to select the word size when reading-writing to memory (part of the memory interface)
+output reg                          gpr_we_a_o,         // Register file write enable signal
+output reg                          wb_src_sel_o,       // Multiplexer control signal for selecting data to be written to the register file
+output reg                          illegal_instr_o,    // Incorrect instruction signal (not marked on the diagram)
+output reg                          branch_o,           // Conditional branch instruction signal
+output reg                          jal_o,              // Jal unconditional jump instruction signal
+output reg                          jalr_o              // Jarl unconditional jump instruction signal
 );
 
 wire  [1:0]  instr_size;
@@ -34,15 +34,16 @@ always @ ( * ) begin
     illegal_instr_o = ~&instr_size;
     mem_req_o       = (instruction == `LOAD_OPCODE |
                        instruction == `STORE_OPCODE);     // Write enable control
+
     mem_we_o        = (instruction == `STORE_OPCODE);     // Input data
 
-    gpr_we_a_o      = (instruction == `AUIPC_OPCODE |
-                       instruction == `OP_IMM_OPCODE |
-                       instruction == `LUI_OPCODE |
-                       instruction == `OP_OPCODE |
-                       instruction == `JAL_OPCODE |
-                       instruction == `JALR_OPCODE |
-                       instruction == `LOAD_OPCODE);      // Disable write to registers
+    gpr_we_a_o      =  (instruction == `AUIPC_OPCODE)|
+                       (instruction == `OP_IMM_OPCODE) |
+                       (instruction == `LUI_OPCODE) |
+                       (instruction == `OP_OPCODE) |
+                       (instruction == `JAL_OPCODE) |
+                       (instruction == `JALR_OPCODE) |
+                       (instruction == `LOAD_OPCODE);      // Disable write to registers
 
     branch_o        = (instruction == `BRANCH_OPCODE);
     jal_o           = (instruction == `JAL_OPCODE);

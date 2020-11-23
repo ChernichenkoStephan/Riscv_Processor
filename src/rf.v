@@ -1,13 +1,13 @@
 module rf (
-	input 					    clk_i,
-	input 		[4:0] 	addr1_i,  // rd1 adress
-	input 		[4:0] 	addr2_i,  // rd2 adress
-	input 		[4:0] 	addr3_i,  // wd adress
-	input 		[31:0]	   wd_i,	// write port
-	input 					     we_i,  // control port
-	input						    reset,  // reset port
-	output 	  [31:0]    rd1_o,  // first read port
-	output	  [31:0]    rd2_o	  // second read port
+	input          clk_i,
+	input  [4:0] addr1_i,   // rd1 adress
+	input  [4:0] addr2_i,   // rd2 adress
+	input  [4:0] addr3_i,   // wd adress
+	input  [31:0]   wd_i,   // write port
+	input           we_i,   // control port
+	input          reset,   // reset port
+	output [31:0]  rd1_o,   // first read port
+	output [31:0]  rd2_o    // second read port
 	);
 
 integer i; // variable for reset loop
