@@ -1,27 +1,28 @@
 # Riscv_Processor
-Simple RISC-V processor project
 
-Decoder for hex display:
-  hex_decoder.v
-Data memory module:
-  miriscv_dm.v
-Ram module:
-  miriscv_ram.sv
-Instructions decoder module:
-  mriscv_decoder.v
-ALU module:
-  miriscv_alu.v
-Instructions memory module:
-  miriscv_im.v
-Register file module:
-  miriscv_rf.v
-Primitive processor module (with simple instructions & without decoder):
-  proto_processor.v
-Simple risc-v processor module:
-  miriscv_core.v
-Load store unit module:
-  miriscv_lsu.v
-Connection module:
-  miriscv_top.sv
-Assembly code to run:
-  task.s
+<p>Simple RISC-V processor university project</p>
+
+<li>Decoder for hex display:</li>
+<ul><li>hex_decoder.v</li></ul>
+<li>Data memory module:</li>
+<ul><li>miriscv_dm.v</li></ul>
+<li>Ram module:</li>
+<ul><li>miriscv_ram.sv</li></ul>
+<li>Instructions decoder module:</li>
+<ul><li>mriscv_decoder.v</li></ul>
+<li>ALU module:</li>
+<ul><li>miriscv_alu.v</li></ul>
+<li>Instructions memory module:</li>
+<ul><li>miriscv_im.v</li></ul>
+<li>Register file module:</li>
+<ul><li>miriscv_rf.v</li></ul>
+<li>Primitive processor module (with simple instructions & without decoder):</li>
+<ul><li>proto_processor.v</li></ul>
+<li>Simple risc-v processor module:</li>
+<ul><li>miriscv_core.v</li></ul>
+<li>Load store unit module:</li>
+<ul><li>miriscv_lsu.v</li></ul>
+<li>Connection module:</li>
+<ul><li>miriscv_top.sv</li></ul>
+<li>Assembly code to run:</li>
+<ul><li>task.s</li></ul>
