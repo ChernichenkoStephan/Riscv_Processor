@@ -1,4 +1,4 @@
-module dm (
+module miriscv_dm (
   input                 clk_i,
   input       [3:0]     I,      // word size
   input       [31:0]    addr_i, // read adress
@@ -21,20 +21,4 @@ module dm (
       end
   end
 
-  always @ ( * ) begin
-    case (I)
-        //LB
-      3'b000 :;
-        //LH
-      3'b001 :;
-        //LW
-      3'b010 :;
-        //LBU
-      3'b100 :;
-        //LHU
-      3'b101 :;
-      default:;
-    endcase
-  end
-
-  endmodule
+endmodule

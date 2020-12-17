@@ -13,7 +13,7 @@ reg           reset;    // reset port
 wire  [31:0]    rd1_o;  // first read port
 wire  [31:0]    rd2_o;  // second read port
 
-rf RAM (clk_i, addr1_i, addr2_i, addr3_i, wd_i, we_i, reset, rd1_o, rd2_o);
+miriscv_rf RAM (clk_i, addr1_i, addr2_i, addr3_i, wd_i, we_i, reset, rd1_o, rd2_o);
 
 localparam CLK_FREQ_MHZ  = 5;                  // 100 MHz
 localparam CLK_SEMI      = CLK_FREQ_MHZ / 2;   // 50  MHz

@@ -10,7 +10,7 @@ reg          we_i;   // control port
 
 wire [31:0]  rd_o;   // read port
 
-dm data_memory (clk_i, I, addr_i, wd_i, we_i, rd_o);
+miriscv_dm data_memory (clk_i, I, addr_i, wd_i, we_i, rd_o);
 
 localparam CLK_FREQ_MHZ  = 5;                  // 100 MHz
 localparam CLK_SEMI      = CLK_FREQ_MHZ / 2;   // 50  MHz

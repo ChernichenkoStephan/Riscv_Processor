@@ -1,4 +1,4 @@
-module im (
+module miriscv_im (
 	input        [31:0] addr_i, // read adress
 	output wire  [31:0] rd_o    // read port
 );

@@ -1,17 +1,31 @@
 `include "../defines/miriscv_defines.v"
 
-module riscv_processor(
-  input             clk_i,
-  input             reset,
-  output reg [31:0] debug_result
+module miriscv_core
+(
+  input              clk_i,            //
+  input              arstn_i,          //
+
+  input  [31:0]      instr_rdata_i,    //
+  output  [31:0]      instr_addr_o,    //
+
+  input              data_gnt_i,       //
+  input              data_rvalid_i,    //
+  input  [31:0]      data_rdata_i,     //
+
+  output             data_req_o,       //
+  output             data_we_o,        //
+  output [3:0]       data_be_o,        //
+  output [31:0]      data_addr_o,      //
+  output [31:0]      data_wdata_o      //
 );
 
   // Processor
   reg  [31:0] program_counter;
-  reg  [31:0] program_counter_add;
+
+  wire enable = !arstn_i;
 
   // Instructions memory
-  wire [31:0] instruction;
+  wire [31:0] instruction = instr_rdata_i;
 
   // Data memory
   wire [31:0] rd;
@@ -50,20 +64,37 @@ module riscv_processor(
   wire    [31:0]   imm_J;
   wire    [31:0]   imm_B;
 
+  // LSU wires
+  wire req;
+  wire kill;
+
   initial program_counter = 32'h76000000;
 
-  im instructions_memory(
-        .addr_i   (program_counter),  // read adress
-        .rd_o     (instruction)       // read port
-  );
+  miriscv_lsu load_store_unit
+  (
+    // hards
+    .clk_i              (clk_i),          // clock
+    .arstn_i            (enable),        // reset
 
-  dm data_memory(
-        .clk_i    (clk_i),
-        .I        (memi),   // word size
-        .addr_i   (result), // read adress
-        .wd_i     (rd2),    // write port
-        .we_i     (mwe),    // control port
-        .rd_o     (rd)      // read port
+    // memory protocol
+    .data_gnt_i         (data_gnt_i),     // ??? Signals that memory has started processing a request
+    .data_rvalid_i      (data_rvalid_i),  // Reports the appearance of a response from memory for data_rdata_i and data_err_i
+    .data_rdata_i       (data_rdata_i),   // The signal contains data from the memory cell at the time of the request acceptance
+    .data_req_o         (data_req_o),     // The signal informs the memory about the presence of a request.
+    .data_we_o          (data_we_o),      // The signal informs the memory about the type of request
+    .data_be_o          (data_be_o),      // The signal is used to indicate the required bytes
+    .data_addr_o        (data_addr_o),    // RAM Data address to write  (data_addr_ram)
+    .data_wdata_o       (data_wdata_o),   // RAM Data to write (data_wdata_ram)
+
+    // core protocol
+    .lsu_addr_i         (result),         // Address to read/write to Data memory
+    .lsu_we_i           (mwe),            // Write enable control port for Data memory
+    .lsu_size_i         (memi),           // Word size control port for Data memory
+    .lsu_data_i         (rd2),            // Write to Data memory port
+    .lsu_req_i          (mrq),            // ??? Indicates that transaction happening
+    .lsu_kill_i         (kill),           // Not need
+    .lsu_stall_req_o    (enpc),           // Stop program_counter
+    .lsu_data_o         (rd)              // Read to Data memory port
   );
 
   mriscv_decoder decoder(
@@ -82,45 +113,49 @@ module riscv_processor(
             .jalr_o             (jalr)              // Jarl unconditional jump instruction signal
   );
 
-  rf register_file(
+  miriscv_rf register_file(
           .clk_i     (clk_i),
           .addr1_i   (instruction[19:15]),  // rd1 adress
           .addr2_i   (instruction[24:20]),  // rd2 adress
           .addr3_i   (instruction[11:7]),   // wd3 adress
           .wd_i      (wd3),                 // write port
           .we_i      (rfwe),                // control port
-          .reset     (reset),               // reset port
+          .reset     (enable),             // reset port
           .rd1_o     (rd1),                 // first read port
           .rd2_o     (rd2)                  // second read port
   );
 
   miriscv_alu alu(
-          .operator_i           (aop),
-          .operand_a_i          (operand_a),
-          .operand_b_i          (operand_b),
-          .result_o             (result),
-          .comparison_result_o  (comparsion_result)
+          .operator_i           (aop),                  // Operation type input
+          .operand_a_i          (operand_a),            // Operand a input
+          .operand_b_i          (operand_b),            // Operand b input
+          .result_o             (result),               // Result of math operation
+          .comparison_result_o  (comparsion_result)     // Result of comparsion operation
   );
 
+  assign instr_addr_o = program_counter; // Output program_counter to RAM (instead of instructions_memory) ???
 
   always @ ( posedge clk_i ) begin
 
     // Main loop
-    if (reset)
+    if (enable)
       program_counter <= 32'h76000000;
     else begin
-      if (jalr)
-        program_counter <= rd1 + imm_I;
-      else begin
-        if ( jal || (comparsion_result && b) )
-          if (b)
-            program_counter <= program_counter + imm_B;
+      if (!enpc) begin
+        if (jalr)
+          program_counter <= rd1 + imm_I;
+        else begin
+          if ( jal || (comparsion_result && b) )
+            if (b)
+              program_counter <= program_counter + imm_B;
+            else
+              program_counter <= program_counter + imm_J;
           else
-            program_counter <= program_counter + imm_J;
-        else
-          program_counter <= program_counter + 32'd4;
+            program_counter <= program_counter + 32'd4;
+        end
       end
     end
+
 
   end
 
@@ -130,8 +165,6 @@ module riscv_processor(
   assign  imm_B  =  {{20{instruction[31]}}, instruction[7], instruction[30:25], instruction[11:8], 1'b0};
 
   always @ ( * ) begin
-
-    debug_result <= rd;
 
     // Multiplexer control signal for selecting data to be written to the register file
     wd3 <= ( WS ? rd : result );

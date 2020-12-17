@@ -5,7 +5,7 @@ module im_tb();
 reg  [31:0] addr_i;  // read adress
 wire [31:0]  rd_o;   // read port
 
-im instructions_memory (addr_i, rd_o);
+miriscv_im instructions_memory (addr_i, rd_o);
 
 task testIM;
   input integer input_addr;

@@ -1,4 +1,4 @@
-module rf (
+module miriscv_rf (
 	input          clk_i,
 	input  [4:0] addr1_i,   // rd1 adress
 	input  [4:0] addr2_i,   // rd2 adress

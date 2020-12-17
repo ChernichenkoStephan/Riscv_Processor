@@ -10,7 +10,7 @@ localparam CLK_SEMI      = CLK_FREQ_MHZ / 2;   // 50  MHz
 
 wire [31:0] result;
 
-riscv_processor processor( clk_i, reset, result );
+miriscv_core processor( clk_i, reset, result );
 
 task testProcessor;
 
